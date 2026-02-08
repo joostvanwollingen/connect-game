@@ -32,6 +32,7 @@
             <button id="newGameBtn" class="btn btn-primary">New Game</button>
             <button id="clearPathBtn" class="btn btn-secondary">Clear Path</button>
             <button id="undoBtn" class="btn btn-secondary">Undo</button>
+            <button id="createLevelBtn" class="btn btn-secondary">Create</button>
         </div>
 
         <div class="difficulty-selector">
@@ -43,6 +44,49 @@
                 <option value="expert">Expert (8×8)</option>
             </select>
         </div>
+
+        <div id="editorPanel" class="editor-panel hidden">
+            <div class="editor-header">
+                <h2>Create Level</h2>
+                <div class="editor-size">
+                    <label for="gridSizeSelect">Grid Size:</label>
+                    <select id="gridSizeSelect">
+                        <option value="5">5×5</option>
+                        <option value="6">6×6</option>
+                        <option value="7">7×7</option>
+                        <option value="8">8×8</option>
+                        <option value="9">9×9</option>
+                        <option value="10">10×10</option>
+                    </select>
+                    <button id="applyGridSizeBtn" class="btn btn-secondary">Apply</button>
+                </div>
+            </div>
+
+            <div class="editor-tools">
+                <div class="tool-group" role="group" aria-label="Editor tools">
+                    <button id="toolNumberBtn" class="tool-btn active" data-tool="number">Number</button>
+                    <button id="toolWallBtn" class="tool-btn" data-tool="wall">Wall</button>
+                    <button id="toolEraserBtn" class="tool-btn" data-tool="erase">Eraser</button>
+                </div>
+                <div class="tool-status">
+                    <span class="label">Next Number:</span>
+                    <span id="nextNumberDisplay">1</span>
+                </div>
+            </div>
+
+            <div class="editor-actions">
+                <button id="testLevelBtn" class="btn btn-primary">Test</button>
+                <button id="shareLevelBtn" class="btn btn-secondary">Share</button>
+                <button id="exitEditorBtn" class="btn btn-secondary">Back to Play</button>
+            </div>
+
+            <div class="editor-status">
+                <span class="label">Solvable:</span>
+                <span id="solvableStatus">Not checked</span>
+            </div>
+        </div>
+
+        <div id="toastContainer" class="toast-container" aria-live="polite"></div>
 
         <div id="victoryModal" class="modal hidden">
             <div class="modal-content">
@@ -56,6 +100,13 @@
                 <button id="closeModalBtn" class="btn btn-secondary">Close</button>
             </div>
         </div>
+
+        <div id="loadingModal" class="modal hidden">
+            <div class="modal-content">
+                <div class="loading-spinner"></div>
+                <p class="loading-message">Generating a new level...</p>
+            </div>
+        </div>
     </div>
 
     <script src="js/grid.js"></script>
@@ -64,7 +115,11 @@
     <script src="js/input.js"></script>
     <script src="js/levelGenerator.js"></script>
     <script src="js/solver.js"></script>
+    <script src="js/serializer.js"></script>
     <script src="js/ui.js"></script>
+    <script src="js/editorUI.js"></script>
+    <script src="js/editorInput.js"></script>
+    <script src="js/toast.js"></script>
     <script src="js/game.js"></script>
 </body>
 </html>

@@ -112,33 +112,57 @@ class LevelGenerator {
         const maxAttempts = wallCount * 10;
         let attempts = 0;
 
+        const solutionSet = new Set(
+            this.solution.map(cell => `${cell.row},${cell.col}`)
+        );
+
+        const solutionEdges = new Set();
+        for (let i = 0; i < this.solution.length - 1; i++) {
+            const c1 = this.solution[i];
+            const c2 = this.solution[i + 1];
+            const edge = this.createEdgeKey(c1.row, c1.col, c2.row, c2.col);
+            solutionEdges.add(edge);
+        }
+
         while (placed < wallCount && attempts < maxAttempts) {
-            const idx = Math.floor(Math.random() * (this.solution.length - 1));
-            const cell1 = this.solution[idx];
-            const cell2 = this.solution[idx + 1];
+            const row1 = Math.floor(Math.random() * grid.rows);
+            const col1 = Math.floor(Math.random() * grid.cols);
+            
+            const directions = [[-1, 0], [1, 0], [0, -1], [0, 1]];
+            const [dr, dc] = directions[Math.floor(Math.random() * directions.length)];
+            const row2 = row1 + dr;
+            const col2 = col1 + dc;
 
-            const otherDirections = [
-                [-1, 0], [1, 0], [0, -1], [0, 1]
-            ].filter(([dr, dc]) => {
-                const newRow = cell1.row + dr;
-                const newCol = cell1.col + dc;
-                return !(newRow === cell2.row && newCol === cell2.col);
-            });
-
-            if (otherDirections.length > 0) {
-                const [dr, dc] = otherDirections[Math.floor(Math.random() * otherDirections.length)];
-                const adjRow = cell1.row + dr;
-                const adjCol = cell1.col + dc;
-
-                if (grid.getCell(adjRow, adjCol)) {
-                    grid.addWall(cell1.row, cell1.col, adjRow, adjCol);
-                    placed++;
-                }
+            if (!grid.getCell(row2, col2)) {
+                attempts++;
+                continue;
             }
 
+            const edge = this.createEdgeKey(row1, col1, row2, col2);
+            if (solutionEdges.has(edge)) {
+                attempts++;
+                continue;
+            }
+
+            if (grid.hasWall(row1, col1, row2, col2)) {
+                attempts++;
+                continue;
+            }
+
+            grid.addWall(row1, col1, row2, col2);
+            placed++;
             attempts++;
         }
     }
+
+    createEdgeKey(row1, col1, row2, col2) {
+        if (row1 < row2 || (row1 === row2 && col1 < col2)) {
+            return `${row1},${col1}-${row2},${col2}`;
+        }
+        return `${row2},${col2}-${row1},${col1}`;
+    }
+
+
 
 
 

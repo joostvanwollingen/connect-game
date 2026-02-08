@@ -3,13 +3,13 @@ class PathManager {
         this.grid = grid;
         this.path = [];
         this.history = [];
-        this.nextRequiredNumber = 1;
+        this.nextRequiredNumber = this.getMinNumber() ?? 1;
     }
 
     reset() {
         this.path = [];
         this.history = [];
-        this.nextRequiredNumber = 1;
+        this.nextRequiredNumber = this.getMinNumber() ?? 1;
         this.grid.reset();
     }
 
@@ -18,7 +18,14 @@ class PathManager {
         if (cell.visited) return false;
 
         if (this.path.length === 0) {
-            return true;
+            // Enforce that the path must start at the cell numbered 1
+            const startPos = this.grid.getNumberPosition(1);
+            if (!startPos) {
+                // No explicit '1' placed -> disallow starting
+                return false;
+            }
+
+            return cell.row === startPos.row && cell.col === startPos.col;
         }
 
         const lastCell = this.path[this.path.length - 1];
@@ -156,9 +163,27 @@ class PathManager {
             }
         }
 
-        this.nextRequiredNumber = 1;
+        this.nextRequiredNumber = this.getMinNumber() ?? 1;
         while (numbersVisited.has(this.nextRequiredNumber)) {
             this.nextRequiredNumber++;
         }
+    }
+
+    getMinNumber() {
+        if (this.grid.numbers.size > 0) {
+            return Math.min(...Array.from(this.grid.numbers.keys()));
+        }
+
+        let minNumber = null;
+        for (let row = 0; row < this.grid.rows; row++) {
+            for (let col = 0; col < this.grid.cols; col++) {
+                const cell = this.grid.cells[row][col];
+                if (cell.number !== null) {
+                    minNumber = minNumber === null ? cell.number : Math.min(minNumber, cell.number);
+                }
+            }
+        }
+
+        return minNumber;
     }
 }

@@ -180,4 +180,40 @@ class Renderer {
 
         return this.grid.getCell(row, col);
     }
+
+    getEdgeFromPoint(x, y) {
+        const rect = this.canvas.getBoundingClientRect();
+        const canvasX = x - rect.left;
+        const canvasY = y - rect.top;
+        const row = Math.floor((canvasY - this.padding) / this.cellSize);
+        const col = Math.floor((canvasX - this.padding) / this.cellSize);
+
+        if (row < 0 || row >= this.grid.rows || col < 0 || col >= this.grid.cols) {
+            return null;
+        }
+
+        const cellLeft = this.padding + col * this.cellSize;
+        const cellTop = this.padding + row * this.cellSize;
+        const offsetX = canvasX - cellLeft;
+        const offsetY = canvasY - cellTop;
+        const edgeThreshold = this.cellSize * 0.22;
+
+        if (offsetY <= edgeThreshold && row > 0) {
+            return { row, col, neighborRow: row - 1, neighborCol: col };
+        }
+
+        if (offsetY >= this.cellSize - edgeThreshold && row < this.grid.rows - 1) {
+            return { row, col, neighborRow: row + 1, neighborCol: col };
+        }
+
+        if (offsetX <= edgeThreshold && col > 0) {
+            return { row, col, neighborRow: row, neighborCol: col - 1 };
+        }
+
+        if (offsetX >= this.cellSize - edgeThreshold && col < this.grid.cols - 1) {
+            return { row, col, neighborRow: row, neighborCol: col + 1 };
+        }
+
+        return null;
+    }
 }

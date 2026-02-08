@@ -14,6 +14,7 @@ class UIController {
             hintBtn: document.getElementById('hintBtn'),
             difficultySelect: document.getElementById('difficultySelect'),
             victoryModal: document.getElementById('victoryModal'),
+            loadingModal: document.getElementById('loadingModal'),
             nextLevelBtn: document.getElementById('nextLevelBtn'),
             closeModalBtn: document.getElementById('closeModalBtn'),
             completionTime: document.getElementById('completionTime'),
@@ -60,6 +61,14 @@ class UIController {
 
     hideVictory() {
         this.elements.victoryModal.classList.add('hidden');
+    }
+
+    showLoading() {
+        this.elements.loadingModal.classList.remove('hidden');
+    }
+
+    hideLoading() {
+        this.elements.loadingModal.classList.add('hidden');
     }
 
     setUndoEnabled(enabled) {

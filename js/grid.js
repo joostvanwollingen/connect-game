@@ -38,6 +38,16 @@ class Grid {
         }
     }
 
+    clearNumber(row, col) {
+        const cell = this.getCell(row, col);
+        if (!cell || cell.number === null) {
+            return;
+        }
+
+        this.numbers.delete(cell.number);
+        cell.number = null;
+    }
+
     getNumberPosition(number) {
         return this.numbers.get(number);
     }
@@ -45,6 +55,11 @@ class Grid {
     addWall(row1, col1, row2, col2) {
         const wall = this.createWallKey(row1, col1, row2, col2);
         this.walls.add(wall);
+    }
+
+    removeWall(row1, col1, row2, col2) {
+        const wall = this.createWallKey(row1, col1, row2, col2);
+        this.walls.delete(wall);
     }
 
     hasWall(row1, col1, row2, col2) {
@@ -91,6 +106,23 @@ class Grid {
                 this.cells[row][col].visited = false;
             }
         }
+    }
+
+    clone() {
+        const clone = new Grid(this.rows, this.cols);
+
+        for (const [number, position] of this.numbers) {
+            clone.setNumber(position.row, position.col, number);
+        }
+
+        for (const wallKey of this.walls) {
+            const [start, end] = wallKey.split('-');
+            const [row1, col1] = start.split(',').map(Number);
+            const [row2, col2] = end.split(',').map(Number);
+            clone.addWall(row1, col1, row2, col2);
+        }
+
+        return clone;
     }
 
     getTotalCells() {
