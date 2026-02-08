@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connect - Logic Puzzle Game</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Connect</h1>
+            <p class="subtitle">Connect the numbers. Fill every cell. End with the highest number.</p>
+        </header>
+
+        <div class="game-info">
+            <div class="level-display">
+                <span class="label">Level:</span>
+                <span id="levelNumber">1</span>
+            </div>
+            <div class="difficulty-display">
+                <span class="label">Difficulty:</span>
+                <span id="difficultyLevel">Easy</span>
+            </div>
+        </div>
+
+        <div class="game-container">
+            <canvas id="gameCanvas"></canvas>
+        </div>
+
+        <div class="controls">
+            <button id="newGameBtn" class="btn btn-primary">New Game</button>
+            <button id="clearPathBtn" class="btn btn-secondary">Clear Path</button>
+            <button id="undoBtn" class="btn btn-secondary">Undo</button>
+        </div>
+
+        <div class="difficulty-selector">
+            <label for="difficultySelect">Difficulty:</label>
+            <select id="difficultySelect">
+                <option value="easy">Easy (5×5)</option>
+                <option value="medium">Medium (6×6)</option>
+                <option value="hard">Hard (7×7)</option>
+                <option value="expert">Expert (8×8)</option>
+            </select>
+        </div>
+
+        <div id="victoryModal" class="modal hidden">
+            <div class="modal-content">
+                <h2>🎉 Puzzle Complete! 🎉</h2>
+                <p class="victory-message">You solved it!</p>
+                <div class="victory-stats">
+                    <p><span class="stat-label">Time:</span> <span id="completionTime">--</span></p>
+                    <p><span class="stat-label">Moves:</span> <span id="moveCount">--</span></p>
+                </div>
+                <button id="nextLevelBtn" class="btn btn-primary">Next Level</button>
+                <button id="closeModalBtn" class="btn btn-secondary">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/grid.js"></script>
+    <script src="js/renderer.js"></script>
+    <script src="js/pathManager.js"></script>
+    <script src="js/input.js"></script>
+    <script src="js/levelGenerator.js"></script>
+    <script src="js/solver.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/game.js"></script>
+</body>
+</html>
