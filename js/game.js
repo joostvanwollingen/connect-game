@@ -349,13 +349,13 @@ class Game {
             this.editorInputHandler.disable();
         }
         this.mode = 'play';
+        this.ui.elements.difficultySelect.parentElement.classList.remove('hidden');
 
         if (this.isCustomLevel) {
             this.ui.elements.difficultySelect.disabled = true;
             this.ui.updateDifficulty('Custom');
         } else {
             this.ui.elements.difficultySelect.disabled = false;
-            this.ui.elements.difficultySelect.parentElement.classList.remove('hidden');
             this.ui.updateDifficulty(this.ui.getDifficulty());
         }
     }
