@@ -2,6 +2,8 @@
 
 Connect the numbers in order, fill every cell, and finish with the highest number.
 
+Play at [https://github.com/joostvanwollingen/connect-game](https://github.com/joostvanwollingen/connect-game).
+
 ## Features
 
 - Procedural levels with increasing difficulty (5×5 → 8×8)
