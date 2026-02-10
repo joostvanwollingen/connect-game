@@ -6,6 +6,7 @@ class EditorInputHandler {
         this.editorUI = editorUI;
         this.onEdit = onEdit;
         this.onGridReplace = onGridReplace;
+        this.onPreviewUpdate = null;
 
         this.isEnabled = false;
         this.history = [];
@@ -19,6 +20,43 @@ class EditorInputHandler {
             this.handleStart(touch.clientX, touch.clientY);
             event.preventDefault();
         }, { passive: false });
+        this.bindPreviewEvents();
+    }
+
+    bindPreviewEvents() {
+        this.canvas.addEventListener('mousemove', (event) => {
+            if (!this.isEnabled) return;
+            const tool = this.editorUI.activeTool;
+
+            if (tool === 'number') {
+                const cell = this.renderer.getCellFromPoint(event.clientX, event.clientY);
+                if (cell && cell.number === null) {
+                    this.editorUI.setPreview('number', this.editorUI.nextNumber, cell, null);
+                } else {
+                    this.editorUI.clearPreview();
+                }
+            } else if (tool === 'wall') {
+                const edge = this.renderer.getEdgeFromPoint(event.clientX, event.clientY);
+                if (edge && !this.grid.hasWall(edge.row, edge.col, edge.neighborRow, edge.neighborCol)) {
+                    this.editorUI.setPreview('wall', null, null, edge);
+                } else {
+                    this.editorUI.clearPreview();
+                }
+            } else {
+                this.editorUI.clearPreview();
+            }
+
+            if (this.onPreviewUpdate) {
+                this.onPreviewUpdate();
+            }
+        });
+
+        this.canvas.addEventListener('mouseleave', () => {
+            this.editorUI.clearPreview();
+            if (this.onPreviewUpdate) {
+                this.onPreviewUpdate();
+            }
+        });
     }
 
     enable() {
@@ -75,6 +113,12 @@ class EditorInputHandler {
 
     placeNumber(cell) {
         if (cell.number !== null) {
+            // Click a placed number to remove it (US3)
+            const removedNumber = cell.number;
+            this.grid.clearNumber(cell.row, cell.col);
+            this.renumberAfterRemoval(removedNumber);
+            this.refreshNextNumber();
+            this.onEdit();
             return;
         }
 
