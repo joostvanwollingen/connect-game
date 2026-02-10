@@ -2,6 +2,12 @@ class EditorUI {
     constructor() {
         this.activeTool = 'number';
         this.nextNumber = 1;
+        this.preview = {
+            type: null,   // 'number' | 'wall' | null
+            value: null,  // number value or null
+            cell: null,   // {row, col} or null (for number preview)
+            edge: null    // {row, col, neighborRow, neighborCol} or null (for wall preview)
+        };
 
         this.elements = {
             panel: document.getElementById('editorPanel'),
@@ -18,6 +24,19 @@ class EditorUI {
         };
 
         this.bindToolButtons();
+    }
+    setPreview(type, value, cell = null, edge = null) {
+        this.preview.type = type;
+        this.preview.value = value;
+        this.preview.cell = cell;
+        this.preview.edge = edge;
+    }
+
+    clearPreview() {
+        this.preview.type = null;
+        this.preview.value = null;
+        this.preview.cell = null;
+        this.preview.edge = null;
     }
 
     bindToolButtons() {

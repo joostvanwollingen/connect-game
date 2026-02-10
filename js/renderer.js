@@ -23,13 +23,14 @@ class Renderer {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
 
-    draw(path = []) {
+    draw(path = [], editorUI = null) {
         this.clear();
         this.drawGrid();
         this.drawWalls();
         this.drawNumbers();
         this.drawPath(path);
         this.drawHint();
+        this.drawEditorPreview(editorUI);
     }
 
     drawGrid() {
@@ -168,6 +169,74 @@ class Renderer {
     showHint(cell) {
         this.hintCell = cell;
         this.hintAnimationStart = Date.now();
+    }
+
+    drawEditorPreview(editorUI) {
+        if (!editorUI || !editorUI.preview || !editorUI.preview.type) return;
+
+        const preview = editorUI.preview;
+        if (preview.type === 'number' && preview.cell) {
+            this.drawDimmedNumberOnCell(preview.cell, preview.value);
+        } else if (preview.type === 'wall' && preview.edge) {
+            this.drawDimmedWallOnEdge(preview.edge);
+        }
+    }
+
+    drawDimmedNumberOnCell(cell, value) {
+        if (!cell) return;
+        const x = this.padding + cell.col * this.cellSize + this.cellSize / 2;
+        const y = this.padding + cell.row * this.cellSize + this.cellSize / 2;
+
+        this.ctx.save();
+        this.ctx.globalAlpha = 0.3;
+
+        this.ctx.fillStyle = '#e3f2fd';
+        this.ctx.beginPath();
+        this.ctx.arc(x, y, this.cellSize * 0.4, 0, Math.PI * 2);
+        this.ctx.fill();
+
+        this.ctx.strokeStyle = '#667eea';
+        this.ctx.lineWidth = 2;
+        this.ctx.stroke();
+
+        this.ctx.font = `bold ${this.cellSize * 0.5}px Arial`;
+        this.ctx.textAlign = 'center';
+        this.ctx.textBaseline = 'middle';
+        this.ctx.fillStyle = '#667eea';
+        this.ctx.fillText(value.toString(), x, y);
+
+        this.ctx.restore();
+    }
+
+    drawDimmedWallOnEdge(edge) {
+        if (!edge) return;
+        const { row, col, neighborRow, neighborCol } = edge;
+
+        this.ctx.save();
+        this.ctx.globalAlpha = 0.35;
+        this.ctx.strokeStyle = '#333';
+        this.ctx.lineWidth = 4;
+        this.ctx.lineCap = 'round';
+
+        if (row === neighborRow) {
+            const x = this.padding + Math.max(col, neighborCol) * this.cellSize;
+            const y1 = this.padding + row * this.cellSize;
+            const y2 = y1 + this.cellSize;
+            this.ctx.beginPath();
+            this.ctx.moveTo(x, y1);
+            this.ctx.lineTo(x, y2);
+            this.ctx.stroke();
+        } else {
+            const y = this.padding + Math.max(row, neighborRow) * this.cellSize;
+            const x1 = this.padding + col * this.cellSize;
+            const x2 = x1 + this.cellSize;
+            this.ctx.beginPath();
+            this.ctx.moveTo(x1, y);
+            this.ctx.lineTo(x2, y);
+            this.ctx.stroke();
+        }
+
+        this.ctx.restore();
     }
 
     getCellFromPoint(x, y) {

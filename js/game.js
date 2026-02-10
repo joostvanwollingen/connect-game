@@ -250,7 +250,7 @@ class Game {
         }
 
         if (this.mode === 'edit') {
-            this.renderer.draw([]);
+            this.renderer.draw([], this.editorUI);
             return;
         }
 
@@ -286,6 +286,7 @@ class Game {
                 () => this.onEditorEdit(),
                 (grid) => this.replaceEditorGrid(grid)
             );
+            this.editorInputHandler.onPreviewUpdate = () => this.render();
         } else {
             this.editorInputHandler.updateGrid(this.editorGrid, this.renderer);
         }
