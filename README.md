@@ -4,6 +4,8 @@ Connect the numbers in order, fill every cell, and finish with the highest numbe
 
 Play at [https://joostvanwollingen.github.io/connect-game](https://joostvanwollingen.github.io/connect-game).
 
+I have since released this game in the [iOS App Store](https://apps.apple.com/nl/app/sequna-puzzle-challenge/id6760978377?l=en-GB) and [Sequna.com](https://sequna.com).
+
 ## Features
 
 - Procedural levels with increasing difficulty (5×5 → 8×8)
